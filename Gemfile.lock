@@ -36,6 +36,7 @@ PATH
       terminal-table (>= 1.4.5, < 2.0.0)
       tty-screen (>= 0.6.3, < 1.0.0)
       tty-spinner (>= 0.8.0, < 1.0.0)
+      vault (~> 0.16.0)
       word_wrap (~> 1.0.0)
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
@@ -331,6 +332,8 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
+    vault (0.16.0)
+      aws-sigv4
     webmock (3.12.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -391,4 +394,4 @@ DEPENDENCIES
   yard (~> 0.9.11)
 
 BUNDLED WITH
-   2.2.27
+   2.2.31

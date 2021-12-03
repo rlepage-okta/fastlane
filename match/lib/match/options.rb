@@ -218,6 +218,21 @@ module Match
                                      description: "Prefix to be used on all objects uploaded to S3",
                                      optional: true),
 
+        # Storage: Vault
+        FastlaneCore::ConfigItem.new(key: :vault_address,
+                                     env_name: "MATCH_VAULT_ADDRESS",
+                                     description: "Address of the Vault server",
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :vault_token,
+                                     env_name: "MATCH_VAULT_TOKEN",
+                                     description: "Vault access token",
+                                     sensitive: true,
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :vault_path,
+                                     env_name: "MATCH_VAULT_PATH",
+                                     description: "Path to the secret storage location",
+                                     optional: true),
+
         # Keychain
         FastlaneCore::ConfigItem.new(key: :keychain_name,
                                      short_option: "-s",

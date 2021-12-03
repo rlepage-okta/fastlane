@@ -34,7 +34,7 @@ module Match
     end
 
     def storage_options
-      return ["git", "google_cloud", "s3"]
+      return ["git", "google_cloud", "s3", "vault"]
     end
   end
 end

@@ -18,6 +18,10 @@ module Match
           "s3" => lambda { |params|
             params[:keychain_name] = params[:s3_bucket]
             return Encryption::OpenSSL.configure(params)
+          },
+          "vault" => lambda { |params|
+            params[:keychain_name] = params[:path]
+            return Encryption::OpenSSL.configure(params)
           }
         }
       end
