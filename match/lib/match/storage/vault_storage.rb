@@ -14,6 +14,7 @@ module Match
       attr_reader :vault_address
       attr_reader :vault_token
       attr_reader :vault_path
+      attr_reader :vault_client
       attr_reader :readonly
       attr_reader :username
       attr_reader :team_id
@@ -92,7 +93,7 @@ module Match
         # No existing working directory, creating a new one now
         self.working_directory = Dir.mktmpdir
 
-        vault_client.list_secrets!(vault_path).objects.each do |object|
+        vault_client.list_secrets!(vault_path).each do |object|
           file_path = object.name # e.g. "N8X438SEU2/certs/distribution/XD9G7QCACF.cer"
 
           download_path = File.join(self.working_directory, file_path)
