@@ -56,6 +56,7 @@ module Match
         vault_address: params[:vault_address],
         vault_token: params[:vault_token],
         vault_path: params[:vault_path],
+        vault_mount: params[:vault_mount],
         readonly: params[:readonly],
         username: params[:readonly] ? nil : params[:username], # only pass username if not readonly
         team_id: params[:team_id],

@@ -14,6 +14,8 @@ module Match
       attr_reader :vault_address
       attr_reader :vault_token
       attr_reader :vault_path
+      attr_reader :vault_mount
+      attr_reader :vault_client
       attr_reader :readonly
       attr_reader :username
       attr_reader :team_id
@@ -22,21 +24,11 @@ module Match
       attr_reader :api_key
 
       def self.configure(params)
-        vault_address = params[:vault_address]
-        vault_token = params[:vault_token]
-        vault_path = params[:vault_path]
-
-        if params[:git_url].to_s.length > 0
-          UI.important("Looks like you still define a `git_url` somewhere, even though")
-          UI.important("you use Vault Storage. You can remove the `git_url`")
-          UI.important("from your Matchfile and Fastfile")
-          UI.message("The above is just a warning, fastlane will continue as usual now...")
-        end
-
         return self.new(
-          vault_address: vault_address,
-          vault_token: vault_token,
-          vault_path: vault_path,
+          vault_address: params[:vault_address],
+          vault_token: params[:vault_token],
+          vault_path: params[:vault_path],
+          vault_mount: params[:vault_mount],
           readonly: params[:readonly],
           username: params[:username],
           team_id: params[:team_id],
@@ -49,12 +41,14 @@ module Match
       def initialize(vault_address: nil,
                      vault_token: nil,
                      vault_path: nil,
+                     vault_mount: nil,
                      readonly: nil,
                      username: nil,
                      team_id: nil,
                      team_name: nil,
                      api_key_path: nil,
                      api_key: nil)
+        @vault_mount = vault_mount
         @vault_path = vault_path
         @vault_client = Fastlane::Helper::VaultClientHelper.new(address: vault_address, token: vault_token)
         @readonly = readonly
@@ -92,7 +86,10 @@ module Match
         # No existing working directory, creating a new one now
         self.working_directory = Dir.mktmpdir
 
-        vault_client.list_secrets!(vault_path).objects.each do |object|
+        print("HENLO\n")
+        print("VP: #{vault_path}\n")
+        print("HENLO\n")
+        vault_client.list_secrets!(vault_path).each do |object|
           file_path = object.name # e.g. "N8X438SEU2/certs/distribution/XD9G7QCACF.cer"
 
           download_path = File.join(self.working_directory, file_path)
@@ -116,15 +113,22 @@ module Match
         # Those doesn't mean they're new, it might just be they're changed
         # Either way, we'll upload them using the same technique
 
+        print("HENLO\n")
+        print("UP: #{vault_path}\n")
+        print("HENLO\n")
+
         files_to_upload.each do |current_file|
+          print("HENLO---\n")
+          print("UP EACH: #{current_file}\n")
+          print("HENLO---\n")
           # Go from
           #   "/var/folders/px/bz2kts9n69g8crgv4jpjh6b40000gn/T/d20181026-96528-1av4gge/:team_id/profiles/development/Development_me.mobileprovision"
           # to
           #   "profiles/development/Development_me.mobileprovision"
           #
           target_path = current_file.gsub(self.working_directory, "")
-          UI.verbose("Uploading '#{target_path}' to Vault Storage...")
-          vault_client.upload_file(target_path, current_file)
+          UI.verbose("Uploading '#{target_path}' to '#{self.vault_path}' in Vault Storage...")
+          vault_client.upload_file(self.vault_path, target_path, current_file)
         end
       end
 

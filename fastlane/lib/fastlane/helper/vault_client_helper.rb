@@ -1,4 +1,5 @@
 require 'vault'
+require 'base64'
 
 module Fastlane
   module Helper
@@ -14,13 +15,22 @@ module Fastlane
       end
 
       def download_file(path)
-        obj = client.logical.read(path)
+        obj = Base64.decode64(client.logical.read(path))
 
         return obj
       end
 
-      def upload_file(path, file_data)
-        client.logical.write(path, file_data)
+      def upload_file(vault_path, file_path, file_data)
+        split_path = vault_path.split("/", 2)
+        print "HENLO\n"
+        print vault_path
+        print "HENLO\n"
+        print file_path
+        print "HENLO\n"
+        print "repathed: #{split_path[0]}/data/#{split_path[1]}"
+        print "HENLO\n"
+
+        client.logical.write("#{split_path[0]}/data/#{split_path[1]}", "#{Base64.encode64(file_path)}": "#{Base64.encode64(file_data)}")
       end
 
       def delete_file(path)

@@ -56,6 +56,7 @@ module Match
         vault_address: params[:vault_address].to_s,
         vault_token: params[:vault_token].to_s,
         vault_path: params[:vault_path].to_s,
+        vault_mount: params[:vault_mount].to_s,
         team_id: params[:team_id] || Spaceship::ConnectAPI.client.portal_team_id
       })
       self.storage.download
